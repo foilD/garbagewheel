@@ -56,7 +56,9 @@ export default {
             end:0,
             screenHeight:0,
             itemCount:0,
-            offsetTop:0
+            offsetTop:0,
+            above:0,
+            below:0
             // screenTree:[]
         }
     },
@@ -232,17 +234,16 @@ export default {
             //         }
             //     });  
             // }
-
-            if(item.fold){
-                
-            }
             
         },
         handleScroll(){
-            console.log(this.$refs['virtualTree'].scrollTop)
+            // console.log(this.$refs['virtualTree'].scrollTop)
             let scrollTop = this.$refs['virtualTree'].scrollTop
-            this.start = Math.floor(scrollTop/this.itemSize)
-            this.end = this.start+this.itemCount
+            this.start = Math.max(Math.floor(scrollTop/this.itemSize)-this.above,0)
+            // this.start = Math.floor(scrollTop/this.itemSize)
+            // this.end = this.start+this.itemCount
+            this.end = Math.min(this.start+this.above+this.below+this.itemCount,this.indeedData.length)
+            // console.log(this.start,this.end,this.above)
             this.offsetTop = this.start*this.itemSize
         }
     },
@@ -251,6 +252,8 @@ export default {
         console.log(this.data)
         this.screenHeight = this.$el.clientHeight
         this.itemCount = Math.ceil(this.screenHeight/this.itemSize)
+        this.above = this.itemCount
+        this.below = this.itemCount
         this.start = 0
         this.end = this.start+this.itemCount
         console.log(this.end)
